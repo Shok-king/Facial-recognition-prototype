@@ -16,7 +16,15 @@ while not New:
         image_BGR = cv2.cvtColor(raw_data, cv2.COLOR_BGRA2BGR)
         image_GREY = cv2.cvtColor(image_BGR, cv2.COLOR_BGR2GRAY)
 
-    face = cascade.detectMultiScale(image_GREY)
-    New = True
-for i[x, y, w, h] in face(0, 3):
-    print(i)
+        face = cascade.detectMultiScale(image_GREY)
+        if len(face) > 0:
+            New = True
+for i in face:
+    x, y, w, h = i
+    face_cropped = image_GREY[y:y+h, x:x+w]
+    thresholded = cv2.adaptiveThreshold(face_cropped, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11, 5)
+    thresholded = cv2.resize(thresholded, (64, 64))
+    flat = []
+    for firstLVL in thresholded:
+        for SecondLVL in firstLVL:
+            flat.append(SecondLVL)
