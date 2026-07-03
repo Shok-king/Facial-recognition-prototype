@@ -9,22 +9,22 @@ cascade = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_frontalface_
 New = False
 #==========================
 #The while loop will constantly check for new frames from the kinect2 sensor, when that new frame is available it converts that picture into grey scale for image processing using haars cascade classifier.
-while not New:
-    if kinect.has_new_color_frame():
-        raw_data = kinect.get_last_color_frame()
-        raw_data = raw_data.reshape((1080, 1920, 4))
-        image_BGR = cv2.cvtColor(raw_data, cv2.COLOR_BGRA2BGR)
-        image_GREY = cv2.cvtColor(image_BGR, cv2.COLOR_BGR2GRAY)
+def MainLoop():
+    while not New:
+        if kinect.has_new_color_frame():
+            raw_data = kinect.get_last_color_frame()
+            raw_data = raw_data.reshape((1080, 1920, 4))
+            image_BGR = cv2.cvtColor(raw_data, cv2.COLOR_BGRA2BGR)
+            image_GREY = cv2.cvtColor(image_BGR, cv2.COLOR_BGR2GRAY)
 
-        face = cascade.detectMultiScale(image_GREY)
-        if len(face) > 0:
-            New = True
-for i in face:
-    x, y, w, h = i
-    face_cropped = image_GREY[y:y+h, x:x+w]
-    thresholded = cv2.adaptiveThreshold(face_cropped, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11, 5)
-    thresholded = cv2.resize(thresholded, (64, 64))
-    flat = []
-    for firstLVL in thresholded:
-        for SecondLVL in firstLVL:
-            flat.append(SecondLVL)
+            face = cascade.detectMultiScale(image_GREY)
+            if len(face) > 0:
+                New = True
+    file = open("database.txt", "a")
+    for i in face:
+        x, y, w, h = i
+        face_cropped = image_GREY[y:y+h, x:x+w]
+        thresholded = cv2.adaptiveThreshold(face_cropped, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11, 5)
+        thresholded = cv2.resize(thresholded, (64, 64))
+        for secondLVL in thresholded:
+            file.write(str(secondLVL))
