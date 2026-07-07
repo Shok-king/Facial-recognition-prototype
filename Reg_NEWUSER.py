@@ -22,16 +22,24 @@ def get_face():
                     break
     new_face = []
     for i in face:
-        x, y, w, h = i
-        face_cropped = image_GREY[y:y+h, x:x+w]
-        thresholded = cv2.resize(face_cropped, (64, 64))
-        thresholded = cv2.adaptiveThreshold(thresholded, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 4)
-        new_face.append(thresholded)
+         x, y, w, h = i 
+         face_cropped = image_GREY[y:y+h, x:x+w]
+         thresholded = cv2.resize(face_cropped, (64, 64))
+         thresholded = cv2.adaptiveThreshold(thresholded, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 4)
+         for Firstlevel in thresholded:
+              for secondlevel in Firstlevel:
+                   new_face.append(secondlevel)
     return new_face
 
-new_face = get_face()
+dictionary = {}
+prompt = str(input("Create ID for new user:\n"))
+dictionary[prompt] = get_face()
+dictionary_stored_array = []
+for cleaneddata in dictionary[prompt]:
+     cleaneddata = str(cleaneddata)
+     dictionary_stored_array.append(cleaneddata)
+     
+
 file = open("database.txt", "a")
-for trueVAL in new_face:
-     np.savetxt(file, trueVAL, delimiter=",")
-     file.write("------------------------\n")
+file.write(prompt + ":" + ",".join(dictionary_stored_array) + "\n")
 file.close()
