@@ -31,15 +31,18 @@ def get_face():
                    new_face.append(secondlevel)
     return new_face
 
-dictionary = {}
-prompt = str(input("Create ID for new user:\n"))
-dictionary[prompt] = get_face()
-dictionary_stored_array = []
-for cleaneddata in dictionary[prompt]:
-     cleaneddata = str(cleaneddata)
-     dictionary_stored_array.append(cleaneddata)
+def stored_biometric():
+    dictionary = {}
+    prompt = str(input("Create ID for new user:\n"))
+    dictionary[prompt] = get_face()
+    dictionary_stored_array = []
+    for cleaneddata in dictionary[prompt]:
+        cleaneddata = str(cleaneddata)
+        dictionary_stored_array.append(cleaneddata)
      
 
-file = open("database.txt", "a")
-file.write(prompt + ":" + ",".join(dictionary_stored_array) + "\n")
-file.close()
+    file = open("database.txt", "a")
+    file.write(prompt + ":" + ",".join(dictionary_stored_array) + "\n")
+    file.close()
+if __name__ == "__main__":
+    stored_biometric()
